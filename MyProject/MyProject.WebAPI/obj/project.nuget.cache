@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "iqNAfSeZBvTuCcXOsXOAG7N8m6yP7lmkAwY1N5Lzpp3/LlvwwXl+U9/R6SrnrUr9QsQqw6ddBSThgYrUMRoeeQ==",
+  "success": true,
+  "projectFilePath": "F:\\MyGithub\\MyProject\\MyProject.WebAPI\\MyProject.WebAPI.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\HUAWEI\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\3.1.22\\microsoft.netcore.app.host.win-x64.3.1.22.nupkg.sha512"
+  ],
+  "logs": []
+}
