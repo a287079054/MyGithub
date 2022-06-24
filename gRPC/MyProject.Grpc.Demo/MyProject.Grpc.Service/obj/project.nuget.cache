@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "jqWDB+aCabhU37p6HwvxHidcZN6IuwQ194HLmALxNnDxC6peZp1fLWECPx0TQiAyHCLzsRLmk8fQ5NtYUKPPFA==",
+  "success": true,
+  "projectFilePath": "F:\\MyGithub\\gRPC\\MyProject.Grpc.Demo\\MyProject.Grpc.Service\\MyProject.Grpc.Service.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\HUAWEI\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\3.1.22\\microsoft.netcore.app.host.win-x64.3.1.22.nupkg.sha512"
+  ],
+  "logs": []
+}
