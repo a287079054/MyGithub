@@ -1,0 +1,26 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "c8f6901f-d7c6-49ae-baed-dad8a86e3d8e": {
+      "ProjectGuid": "c8f6901f-d7c6-49ae-baed-dad8a86e3d8e",
+      "DisplayName": "MyProject.Grpc.Service",
+      "ColorIndex": 0
+    },
+    "4021cdf5-5a6a-440b-b40c-4305df960aec": {
+      "ProjectGuid": "4021cdf5-5a6a-440b-b40c-4305df960aec",
+      "DisplayName": "GrpcGreeterService",
+      "ColorIndex": 1
+    },
+    "7614f74c-0bc2-4d1c-b426-a0ab18bc4321": {
+      "ProjectGuid": "7614f74c-0bc2-4d1c-b426-a0ab18bc4321",
+      "DisplayName": "GrpcGreeterClient",
+      "ColorIndex": 2
+    },
+    "798756be-2e32-45af-aa68-29c2c53d501e": {
+      "ProjectGuid": "798756be-2e32-45af-aa68-29c2c53d501e",
+      "DisplayName": "GrpcGreeterService",
+      "ColorIndex": 3
+    }
+  },
+  "NextColorIndex": 4
+}

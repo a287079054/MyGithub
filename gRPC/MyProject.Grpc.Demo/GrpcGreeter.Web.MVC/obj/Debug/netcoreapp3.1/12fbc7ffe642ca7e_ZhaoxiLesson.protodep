@@ -1,0 +1,2 @@
+obj\Debug\netcoreapp3.1\Protos/ZhaoxiLesson.cs \
+obj\Debug\netcoreapp3.1\Protos/ZhaoxiLessonGrpc.cs: Protos/ZhaoxiLesson.proto

@@ -3,9 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrpcGreeterClient", "GrpcGreeterClient\GrpcGreeterClient.csproj", "{7614F74C-0BC2-4D1C-B426-A0AB18BC4321}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GrpcGreeterClient", "GrpcGreeterClient\GrpcGreeterClient.csproj", "{7614F74C-0BC2-4D1C-B426-A0AB18BC4321}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrpcGreeterService", "GrpcGreeterService\GrpcGreeterService.csproj", "{798756BE-2E32-45AF-AA68-29C2C53D501E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GrpcGreeterService", "GrpcGreeterService\GrpcGreeterService.csproj", "{798756BE-2E32-45AF-AA68-29C2C53D501E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrpcGreeter.Web.MVC", "GrpcGreeter.Web.MVC\GrpcGreeter.Web.MVC.csproj", "{95A6BEF6-1A38-4AC1-A445-5830F5DBD128}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrpcGreeter.Framework", "Grpc.Framework\GrpcGreeter.Framework.csproj", "{D0C2CDB3-0553-43A7-A76F-1D4AA3101240}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrpcGreeterService.LessonServer", "GrpcGreeterService.LessonServer\GrpcGreeterService.LessonServer.csproj", "{4DFFE1D5-A182-49C8-A0E3-7066982CD09A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrpcGreeterService.UserServer", "GrpcGreeterService.UserServer\GrpcGreeterService.UserServer.csproj", "{4053094E-EF6A-4D49-B5C6-2E6179DB28E6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrpcGreeter.AuthenticationCenterJWT", "GrpcGreeter.AuthenticationCenterJWT\GrpcGreeter.AuthenticationCenterJWT.csproj", "{204DDA06-4B6C-4DC6-8663-827EF026BC97}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +31,26 @@ Global
 		{798756BE-2E32-45AF-AA68-29C2C53D501E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{798756BE-2E32-45AF-AA68-29C2C53D501E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{798756BE-2E32-45AF-AA68-29C2C53D501E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{95A6BEF6-1A38-4AC1-A445-5830F5DBD128}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95A6BEF6-1A38-4AC1-A445-5830F5DBD128}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95A6BEF6-1A38-4AC1-A445-5830F5DBD128}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95A6BEF6-1A38-4AC1-A445-5830F5DBD128}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0C2CDB3-0553-43A7-A76F-1D4AA3101240}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0C2CDB3-0553-43A7-A76F-1D4AA3101240}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0C2CDB3-0553-43A7-A76F-1D4AA3101240}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0C2CDB3-0553-43A7-A76F-1D4AA3101240}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4DFFE1D5-A182-49C8-A0E3-7066982CD09A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DFFE1D5-A182-49C8-A0E3-7066982CD09A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DFFE1D5-A182-49C8-A0E3-7066982CD09A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DFFE1D5-A182-49C8-A0E3-7066982CD09A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4053094E-EF6A-4D49-B5C6-2E6179DB28E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4053094E-EF6A-4D49-B5C6-2E6179DB28E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4053094E-EF6A-4D49-B5C6-2E6179DB28E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4053094E-EF6A-4D49-B5C6-2E6179DB28E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{204DDA06-4B6C-4DC6-8663-827EF026BC97}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{204DDA06-4B6C-4DC6-8663-827EF026BC97}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{204DDA06-4B6C-4DC6-8663-827EF026BC97}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{204DDA06-4B6C-4DC6-8663-827EF026BC97}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,0 +1,3 @@
+is_global = true
+build_property.RootNamespace = GrpcGreeter.Framework
+build_property.ProjectDir = F:\MyGithub\gRPC\MyProject.Grpc.Demo\Grpc.Framework\

@@ -1,0 +1,3 @@
+obj\Debug\netcoreapp3.1\Protos/CustomMath.cs \
+obj\Debug\netcoreapp3.1\Protos/CustomMathGrpc.cs: C:/Users/HUAWEI/.nuget/packages/grpc.tools/2.47.0/build/native/include/google/protobuf/empty.proto\
+ Protos/CustomMath.proto

@@ -9,6 +9,7 @@ F:\MyGithub\gRPC\MyProject.Grpc.Demo\GrpcGreeterClient\bin\Debug\netcoreapp3.1\G
 F:\MyGithub\gRPC\MyProject.Grpc.Demo\GrpcGreeterClient\bin\Debug\netcoreapp3.1\Grpc.Net.Client.dll
 F:\MyGithub\gRPC\MyProject.Grpc.Demo\GrpcGreeterClient\bin\Debug\netcoreapp3.1\Grpc.Net.Common.dll
 F:\MyGithub\gRPC\MyProject.Grpc.Demo\GrpcGreeterClient\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Logging.Abstractions.dll
+F:\MyGithub\gRPC\MyProject.Grpc.Demo\GrpcGreeterClient\obj\Debug\netcoreapp3.1\GrpcGreeterClient.csproj.AssemblyReference.cache
 F:\MyGithub\gRPC\MyProject.Grpc.Demo\GrpcGreeterClient\obj\Debug\netcoreapp3.1\GrpcGreeterClient.GeneratedMSBuildEditorConfig.editorconfig
 F:\MyGithub\gRPC\MyProject.Grpc.Demo\GrpcGreeterClient\obj\Debug\netcoreapp3.1\GrpcGreeterClient.AssemblyInfoInputs.cache
 F:\MyGithub\gRPC\MyProject.Grpc.Demo\GrpcGreeterClient\obj\Debug\netcoreapp3.1\GrpcGreeterClient.AssemblyInfo.cs
@@ -17,4 +18,3 @@ F:\MyGithub\gRPC\MyProject.Grpc.Demo\GrpcGreeterClient\obj\Debug\netcoreapp3.1\G
 F:\MyGithub\gRPC\MyProject.Grpc.Demo\GrpcGreeterClient\obj\Debug\netcoreapp3.1\GrpcGreeterClient.dll
 F:\MyGithub\gRPC\MyProject.Grpc.Demo\GrpcGreeterClient\obj\Debug\netcoreapp3.1\GrpcGreeterClient.pdb
 F:\MyGithub\gRPC\MyProject.Grpc.Demo\GrpcGreeterClient\obj\Debug\netcoreapp3.1\GrpcGreeterClient.genruntimeconfig.cache
-F:\MyGithub\gRPC\MyProject.Grpc.Demo\GrpcGreeterClient\obj\Debug\netcoreapp3.1\GrpcGreeterClient.csproj.AssemblyReference.cache

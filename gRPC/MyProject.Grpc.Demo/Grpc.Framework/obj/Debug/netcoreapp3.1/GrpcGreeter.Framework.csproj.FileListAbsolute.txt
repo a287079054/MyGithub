@@ -1,0 +1,10 @@
+F:\MyGithub\gRPC\MyProject.Grpc.Demo\Grpc.Framework\bin\Debug\netcoreapp3.1\GrpcGreeter.Framework.deps.json
+F:\MyGithub\gRPC\MyProject.Grpc.Demo\Grpc.Framework\bin\Debug\netcoreapp3.1\GrpcGreeter.Framework.dll
+F:\MyGithub\gRPC\MyProject.Grpc.Demo\Grpc.Framework\bin\Debug\netcoreapp3.1\GrpcGreeter.Framework.pdb
+F:\MyGithub\gRPC\MyProject.Grpc.Demo\Grpc.Framework\obj\Debug\netcoreapp3.1\GrpcGreeter.Framework.GeneratedMSBuildEditorConfig.editorconfig
+F:\MyGithub\gRPC\MyProject.Grpc.Demo\Grpc.Framework\obj\Debug\netcoreapp3.1\GrpcGreeter.Framework.AssemblyInfoInputs.cache
+F:\MyGithub\gRPC\MyProject.Grpc.Demo\Grpc.Framework\obj\Debug\netcoreapp3.1\GrpcGreeter.Framework.AssemblyInfo.cs
+F:\MyGithub\gRPC\MyProject.Grpc.Demo\Grpc.Framework\obj\Debug\netcoreapp3.1\GrpcGreeter.Framework.csproj.CoreCompileInputs.cache
+F:\MyGithub\gRPC\MyProject.Grpc.Demo\Grpc.Framework\obj\Debug\netcoreapp3.1\GrpcGreeter.Framework.dll
+F:\MyGithub\gRPC\MyProject.Grpc.Demo\Grpc.Framework\obj\Debug\netcoreapp3.1\GrpcGreeter.Framework.pdb
+F:\MyGithub\gRPC\MyProject.Grpc.Demo\Grpc.Framework\obj\Debug\netcoreapp3.1\GrpcGreeter.Framework.csproj.AssemblyReference.cache

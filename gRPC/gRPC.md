@@ -11,13 +11,13 @@ dotnet dev-certs https --trust  //信任证书
 
 **标量值始终具有默认值，并且不能设置为`null`. 此约束包括哪些是 C# 类`string`。默认为空字符串值，默认为空字节值。尝试将它们设置为会引发错误。`ByteString``string``ByteString``null`**
 
-<img src="F:\MyGithub\TImg\1.png" style="zoom: 80%;" />
+<img src="F:\MyGithub\gRPC\Img\1.png" style="zoom: 80%;" />
 
 ### 日期和时间类型
 
 本机标量类型不提供日期和时间值，相当于 .NET 的[DateTimeOffset](https://docs.microsoft.com/en-us/dotnet/api/system.datetimeoffset)、[DateTime](https://docs.microsoft.com/en-us/dotnet/api/system.datetime)和[TimeSpan](https://docs.microsoft.com/en-us/dotnet/api/system.timespan)。这些类型可以通过使用一些 Protobuf 的*Well-Known Types*扩展来指定。这些扩展为跨受支持平台的复杂字段类型提供代码生成和运行时支持。
 
-![](F:\MyGithub\TImg\2.png)
+![](F:\MyGithub\gRPC\Img\2.png)
 
 C# 类中生成的属性不是 .NET 日期和时间类型。属性使用命名空间中的`Timestamp`和`Duration`类`Google.Protobuf.WellKnownTypes`。这些类提供了与 、 和 相互转换`DateTimeOffset`的`DateTime`方法`TimeSpan`。
 
@@ -51,7 +51,7 @@ message Person {
 
 `wrappers.proto`类型不会在生成的属性中公开。Protobuf 自动将它们映射到 C# 消息中适当的 .NET 可空类型。例如，一个`google.protobuf.Int32Value`字段生成一个`int?`属性。引用类型属性如`string`和`ByteString`不变，除非`null`可以无误地分配给它们。
 
-<img src="F:\MyGithub\TImg\3.png" style="zoom:80%;" />
+<img src="F:\MyGithub\gRPC\Img\3.png" style="zoom:80%;" />
 
 ### 字节(Bytes)
 
@@ -207,13 +207,13 @@ var client = new Greet.GreeterClient(channel);
 1. 启动 Visual Studio 并选择**Create a new project**。或者，从 Visual Studio**文件**菜单中，选择**新建**>**项目**。
 2. 在**Create a new project**对话框中，选择**gRPC Service**并选择**Next**：
 
-![](F:\MyGithub\TImg\4.png)
+![](F:\MyGithub\gRPC\Img\4.png)
 
 3.按 Ctrl+F5 在没有调试器的情况下运行。
 
 当项目尚未配置为使用 SSL 时，Visual Studio 会显示以下对话框：
 
-![](F:\MyGithub\TImg\5.png)
+![](F:\MyGithub\gRPC\Img\5.png)
 
 gRPC 模板配置为使用[传输层安全性 (TLS)](https://tools.ietf.org/html/rfc5246)。gRPC 客户端需要使用 HTTPS 来调用服务器。
 
@@ -339,7 +339,7 @@ info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
 
 - 新增CustomMath.proto文件，可以copy其他.proto文件，再修改服务类型，注意命名空间保持一致
 
-![](F:\MyGithub\TImg\6.png)
+![](F:\MyGithub\gRPC\Img\6.png)
 
 - 新增CustomMathService实现
 
@@ -446,11 +446,11 @@ info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
 
 - 将CustomMath.proto拷贝到客户端，并修改命名空间
 
-![](F:\MyGithub\TImg\7.png)
+![](F:\MyGithub\gRPC\Img\7.png)
 
 - 修改项目文件内容
 
-![](F:\MyGithub\TImg\8.png)
+![](F:\MyGithub\gRPC\Img\8.png)
 
 - 客户端调用
 
@@ -468,3 +468,479 @@ info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
  			}
 ```
 
+### .NetCore调用RPC服务
+
+1. 添加安装包
+
+- Google.Protobuf
+- Grpc.Net.Client
+- Grpc.Net.ClientFactory
+- Grpc.Tools
+  <img src="F:\MyGithub\gRPC\Img\9.png" style="zoom:67%;" />
+
+2. 新建Protos文件夹，将.proto文件拷贝到目录下，并修改项目属性
+
+   ```c#
+   	<ItemGroup>
+   		<Protobuf Include="Protos\CustomMath.proto" GrpcServices="Client" />
+   	</ItemGroup>
+   ```
+
+3. starup-ConfigureServices方法
+
+   ```c#
+      public void ConfigureServices(IServiceCollection services)
+           {
+               services.AddRazorPages();
+               #region gRPC
+               //集中管理
+               services.AddGrpcClient<CustomMath.CustomMathClient>(options =>
+               {
+                   options.Address = new Uri("https://localhost:5001");
+                   //options.Interceptors.Add(new CustomClientLoggerInterceptor());
+               });
+               #endregion
+           }
+   ```
+
+4. Controller调用grpc方法
+
+   ```c#
+     public class gRPCController : Controller
+       {
+           private readonly ILogger<gRPCController> _logger;
+           private readonly CustomMath.CustomMathClient _customMathClient;
+           //private readonly ZhaoxiLesson.ZhaoxiLessonClient _lessonClient;
+           //private readonly ZhaoxiUser.ZhaoxiUserClient _userClient;
+           public gRPCController(ILogger<gRPCController> logger
+               , CustomMath.CustomMathClient customMathClient
+               //, ZhaoxiLesson.ZhaoxiLessonClient lessonClient
+               //, ZhaoxiUser.ZhaoxiUserClient userClient
+               )
+           {
+               _logger = logger;
+               this._customMathClient = customMathClient;
+               //this._lessonClient = lessonClient;
+               //this._userClient = userClient;
+           }
+   
+           public async Task<IActionResult> Index()
+           {
+               //using (var channel = GrpcChannel.ForAddress("https://localhost:5001"))
+               //{
+               //    var client = new CustomMath.CustomMathClient(channel);
+   
+               //    Console.WriteLine("***************单次调用************");
+               //    {
+               //        var reply = await client.SayHelloAsync(new HelloRequestMath { Name = "Eleven" });
+               //        Console.WriteLine($"CustomMath {Thread.CurrentThread.ManagedThreadId} 服务返回数据:{reply.Message} ");
+               //    }
+               //}
+               {
+                   var reply = await this._customMathClient.SayHelloAsync(new HelloRequestMath { Name = "Eleven1" });
+                   Console.WriteLine($"CustomMath {Thread.CurrentThread.ManagedThreadId} 服务返回数据1:{reply.Message} ");
+               }
+               {
+                   var reply = this._customMathClient.SayHello(new HelloRequestMath { Name = "Eleven2" });
+                   Console.WriteLine($"CustomMath {Thread.CurrentThread.ManagedThreadId} 服务返回数据2:{reply.Message} ");
+               }
+               {
+                   //var reply = await this._lessonClient.FindLessonAsync(new ZhaoxiLessonRequest() { Id = 123 });
+   
+                   //#region MyRegion
+                   //string token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiRWxldmVuIiwiRU1haWwiOiI1NzI2NTE3N0BxcS5jb20iLCJBY2NvdW50IjoieHV5YW5nQHpoYW94aUVkdS5OZXQiLCJBZ2UiOiIzMyIsIklkIjoiMTIzIiwiTW9iaWxlIjoiMTg2NjQ4NzY2NzEiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbiIsIlNleCI6IjEiLCJuYmYiOjE1OTA3NTgzNDcsImV4cCI6MTU5MDc2MTg4NywiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo1NzI2IiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdDo1NzI2In0.7vMHx62XENyhkksCjnT5AeT78K3zG-z7B3hzv8DGPDI";
+                   //var headers = new Metadata { { "Authorization", $"Bearer {token}" } };
+   
+                   //var reply = await this._lessonClient.FindLessonAsync(new ZhaoxiLessonRequest() { Id = 123 },
+                   //    headers: headers);
+                   //#endregion
+   
+                   //var reply = await this._lessonClient.FindLessonAsync(new ZhaoxiLessonRequest() { Id = 123 });
+                   //Console.WriteLine($"_lessonClient {Thread.CurrentThread.ManagedThreadId} 服务返回数据3:{Newtonsoft.Json.JsonConvert.SerializeObject(reply.Lesson)} ");
+               }
+   
+               {
+                   //var reply = await this._userClient.FindUserAsync(new ZhaoxiUserRequest() { Id = 123 });
+                   //Console.WriteLine($"_userClient {Thread.CurrentThread.ManagedThreadId} 服务返回数据4:{Newtonsoft.Json.JsonConvert.SerializeObject(reply.User)} ");
+                   //base.ViewBag.Luck = reply.User.Name;
+               }
+               return View();
+           }
+       }
+   ```
+
+### AOP
+
+项目新建公共类库：GrpcGreeter.Framework
+
+![](F:\MyGithub\gRPC\Img\10.png)
+
+#### 服务端
+
+- 新建类：CustomServerLoggerInterceptor
+
+```c#
+ public class CustomServerLoggerInterceptor : Interceptor
+    {
+        //private readonly ILogger<CustomServerLoggerInterceptor> _logger;
+
+        //public CustomServerLoggerInterceptor(ILogger<CustomServerLoggerInterceptor> logger)
+        //{
+        //    _logger = logger;
+        //}
+
+        /// <summary>
+        /// 简单RPC--异步式调用
+        /// </summary>
+        /// <typeparam name="TRequest"></typeparam>
+        /// <typeparam name="TResponse"></typeparam>
+        /// <param name="request"></param>
+        /// <param name="context"></param>
+        /// <param name="continuation"></param>
+        /// <returns></returns>
+        public override Task<TResponse> UnaryServerHandler<TRequest, TResponse>(
+            TRequest request,
+            ServerCallContext context,
+            UnaryServerMethod<TRequest, TResponse> continuation)
+        {
+            LogAOP<TRequest, TResponse>(MethodType.Unary, context);
+            return continuation(request, context);
+        }
+
+        private void LogAOP<TRequest, TResponse>(MethodType methodType, ServerCallContext context)
+             where TRequest : class
+             where TResponse : class
+        {
+            Console.WriteLine("****************AOP 开始*****************");
+            Console.WriteLine($"{context.RequestHeaders[0]}---{context.Host}--{context.Method}--{context.Peer}");
+            Console.WriteLine($"Type: {methodType}. Request: {typeof(TRequest)}. Response: {typeof(TResponse)}");
+            Console.WriteLine("****************AOP 结束*****************");
+        }
+    }
+```
+
+- configservice方法
+
+```c#
+  public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddGrpc(
+             option =>
+             { 
+                 //AOP,类似特性标记
+                 option.Interceptors.Add<CustomServerLoggerInterceptor>();
+             });
+        }
+```
+
+#### 客户端
+
+- 公共类库新建CustomClientLoggerInterceptor类
+
+```c#
+ public class CustomClientLoggerInterceptor : Interceptor
+    {
+        public override AsyncUnaryCall<TResponse> AsyncUnaryCall<TRequest, TResponse>(
+           TRequest request,
+           ClientInterceptorContext<TRequest, TResponse> context,
+           AsyncUnaryCallContinuation<TRequest, TResponse> continuation)
+        {
+            this.LogAOP(context.Method);
+            return continuation(request, context);
+        }
+
+        private void LogAOP<TRequest, TResponse>(Method<TRequest, TResponse> method)
+            where TRequest : class
+            where TResponse : class
+        {
+            Console.WriteLine("****************AOP 开始*****************");
+            Console.WriteLine($"{method.Name}---{method.FullName}--{method.ServiceName}");
+            Console.WriteLine($"Type: {method.Type}. Request: {typeof(TRequest)}. Response: {typeof(TResponse)}");
+            Console.WriteLine("****************AOP 结束*****************");
+        }
+
+    }
+```
+
+- configservice方法
+
+```c#
+       services.AddGrpcClient<CustomMath.CustomMathClient>(options =>
+            {
+                options.Address = new Uri("https://localhost:5001");
+                options.Interceptors.Add(new CustomClientLoggerInterceptor());
+            });
+```
+
+- Controller调用grpc方法
+
+### JWT
+
+#### 服务提供者
+
+- 新建项目：Zhaoxi.gRPCDemo.LessonServer
+
+- 添加Protos文件夹，添加ZhaoxiLesson.proto文件
+
+- 添加ZhaoxiLessonService服务实现类
+
+- 修改Zhaoxi.gRPCDemo.LessonServer项目文件
+
+  ```c#
+   <ItemGroup>
+      <Protobuf Include="Protos\greet.proto" GrpcServices="Server" />
+      <Protobuf Include="Protos\ZhaoxiLesson.proto" GrpcServices="Server" />
+    </ItemGroup>
+  ```
+
+- appsettings.json：添加JWT配置
+
+  ```c#
+    "JWTTokenOptions": {
+      "Audience": "http://localhost:5726",
+      "Issuer": "http://localhost:5726",
+      "SecurityKey": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDI2a2EJ7m872v0afyoSDJT2o1+SitIeJSWtLJU8/Wz2m7gStexajkeD+Lka6DSTy8gt9UwfgVQo6uKjVLG5Ex7PiGOODVqAEghBuS7JzIYU5RvI543nNDAPfnJsas96mSA7L/mD7RTE2drj6hf3oZjJpMPZUQI/B1Qjb5H3K3PNwIDAQAB"
+    }
+  ```
+
+- Starup-ConfigureServices：添加校验规则
+
+  ```c#
+    #region jwt校验  HS
+              JWTTokenOptions tokenOptions = new JWTTokenOptions();
+              this.Configuration.Bind("JWTTokenOptions", tokenOptions);
+              services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)//Scheme
+              .AddJwtBearer(options =>
+              {
+                  options.TokenValidationParameters = new TokenValidationParameters
+                  {
+                      //JWT有一些默认的属性，就是给鉴权时就可以筛选了
+                      ValidateIssuer = true,//是否验证Issuer
+                      ValidateAudience = true,//是否验证Audience
+                      ValidateLifetime = true,//是否验证失效时间
+                      ValidateIssuerSigningKey = true,//是否验证SecurityKey
+                      ValidAudience = tokenOptions.Audience,//
+                      ValidIssuer = tokenOptions.Issuer,//Issuer，这两项和前面签发jwt的设置一致
+                      IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenOptions.SecurityKey)),//拿到SecurityKey
+                  };
+              });
+              services.AddAuthorization(options =>
+              {
+                  options.AddPolicy("grpcEMail", policyBuilder =>
+                  policyBuilder.RequireAssertion(context =>
+                     context.User.HasClaim(c => c.Type == "EMail")
+                     && context.User.Claims.First(c => c.Type.Equals("EMail")).Value.EndsWith("@qq.com")));
+              });
+              #endregion
+  ```
+
+- Configure方法
+
+  ```c#
+     app.UseEndpoints(endpoints =>
+              {
+                  endpoints.MapGrpcService<GreeterService>();
+                  endpoints.MapGrpcService<ZhaoxiLessonService>();//注册服务
+                  endpoints.MapGet("/", async context =>
+                  {
+                      await context.Response.WriteAsync("Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
+                  });
+              });
+  ```
+
+  
+
+#### 权限鉴定中心
+
+- 新建项目：GrpcGreeter.AuthenticationCenterJWT
+
+- 配置文件：appsettings.json
+
+  ```c#
+  "JWTTokenOptions": {
+      "Audience": "http://localhost:5726", //GrpcGreeter.Web.MVC项目启动的地址
+      "Issuer": "http://localhost:5726",
+      "SecurityKey": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDI2a2EJ7m872v0afyoSDJT2o1+SitIeJSWtLJU8/Wz2m7gStexajkeD+Lka6DSTy8gt9UwfgVQo6uKjVLG5Ex7PiGOODVqAEghBuS7JzIYU5RvI543nNDAPfnJsas96mSA7L/mD7RTE2drj6hf3oZjJpMPZUQI/B1Qjb5H3K3PNwIDAQAB"
+    }
+  ```
+
+- StarUp-ConfigureServices方法
+
+  ```c#
+    #region HS256
+    services.AddScoped<IJWTService, JWTHSService>();
+    services.Configure<JWTTokenOptions>(this.Configuration.GetSection("JWTTokenOptions"));
+    #endregion
+    #region RS256
+    //services.AddScoped<IJWTService, JWTRSService>();
+    //services.Configure<JWTTokenOptions>(this.Configuration.GetSection("JWTTokenOptions"));
+    #endregion
+  ```
+
+#### 服务调用方
+
+- GrpcGreeter.Web.MVC
+
+- 添加ZhaoxiLesson.proto文件，修改GrpcGreeter.Web.MVC项目文件
+
+```c#
+<ItemGroup>
+		<Protobuf Include="Protos\CustomMath.proto" GrpcServices="Client" />
+		<Protobuf Include="Protos\ZhaoxiLesson.proto" GrpcServices="Client" />
+	</ItemGroup>
+```
+
+- Starup-ConfigureService方法
+
+```c#
+ public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddRazorPages();
+            #region gRPC
+            //集中管理
+            services.AddGrpcClient<CustomMath.CustomMathClient>(options =>
+            {
+                options.Address = new Uri("https://localhost:5001");
+                options.Interceptors.Add(new CustomClientLoggerInterceptor());
+            });
+
+            services.AddGrpcClient<ZhaoxiLesson.ZhaoxiLessonClient>(options =>
+            {
+                options.Address = new Uri("https://localhost:6001");
+                options.Interceptors.Add(new CustomClientLoggerInterceptor());
+            })//这里可以采用全局配置，通过JWTTokenHelper.GetJWTToken()获取token后传入Authorization
+            .ConfigureChannel(grpcOptions =>
+            {
+                var callCredentials = CallCredentials.FromInterceptor(async (context, metadata) =>
+                {
+                    string token = JWTTokenHelper.GetJWTToken().Result;//即时获取的--加一层缓存
+                    Console.WriteLine($"token:{token}");
+                    metadata.Add("Authorization", $"Bearer {token}");
+                });
+                grpcOptions.Credentials = ChannelCredentials.Create(new SslCredentials(), callCredentials);
+                //请求都带上token，也可以在调用方法时传递： var replyPlus = await client.PlusAsync(requestPara, headers);
+            });
+            #endregion
+        }
+```
+
+- GrpcController控制器调用方法
+
+  ```c#
+    public class GrpcController : Controller
+      {
+          private readonly ILogger<GrpcController> _logger;
+          private readonly ZhaoxiLesson.ZhaoxiLessonClient _lessonClient;
+          public GrpcController(ILogger<GrpcController> logger,
+       ZhaoxiLesson.ZhaoxiLessonClient lessonClient
+              )
+          {
+              _logger = logger;
+              this._lessonClient = lessonClient;
+          }
+  
+          public async Task<IActionResult> Index()
+          {
+              //全局配置那边获取token后直接调用方法
+             var reply = await this._lessonClient.FindLessonAsync(new ZhaoxiLessonRequest() { Id = 123 });
+              #region MyRegion 
+                  //string token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiRWxldmVuIiwiRU1haWwiOiI1NzI2NTE3N0BxcS5jb20iLCJBY2NvdW50IjoieHV5YW5nQHpoYW94aUVkdS5OZXQiLCJBZ2UiOiIzMyIsIklkIjoiMTIzIiwiTW9iaWxlIjoiMTg2NjQ4NzY2NzEiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbiIsIlNleCI6IjEiLCJuYmYiOjE2NTYzMTcxOTksImV4cCI6MTY1NjMyMDczOSwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo1NzI2IiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdDo1NzI2In0.A4siN2Z8ZsYFML6OVnjxSv5KJzAP8L2LhgMl5orDhSQ";
+             //全局未配置token,则将token在调用的时候传入
+             //var headers = new Metadata { { "Authorization", $"Bearer {token}" } };
+             //var reply = await this._lessonClient.FindLessonAsync(new ZhaoxiLessonRequest() { Id = 123 },
+                  //    headers: headers);
+              #endregion
+              return View();
+          }
+      }
+  ```
+
+- JWTTokenHelper类
+
+```c#
+public class JWTTokenHelper
+    {
+        public class JWTTokenResult
+        {
+            public bool result { get; set; }
+            public string token { get; set; }
+        }
+
+        /// <summary>
+        /// 后台通过post请求登陆获取token
+        /// </summary>
+        /// <returns></returns>
+        public async static Task<string> GetJWTToken()
+        {
+            //string result = await PostWebQuest();
+            string result = await PostClient();
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<JWTTokenResult>(result).token;
+        }
+
+        #region HttpClient实现Post请求
+        /// <summary>
+        /// HttpClient实现Post请求
+        /// </summary>
+        private async static Task<string> PostClient()
+        {
+            Dictionary<string, string> dic = new Dictionary<string, string>()
+            {
+                {"Name","Eleven" },
+                {"Password","123456" }
+            };
+            string url = "https://localhost:5002/api/Authentication/Login?name=Eleven&password=123456";
+            HttpClientHandler handler = new HttpClientHandler();
+            using (var http = new HttpClient(handler))
+            {
+                var content = new FormUrlEncodedContent(dic);
+                var response = await http.PostAsync(url, content);
+                Console.WriteLine(response.StatusCode); //确保HTTP成功状态值
+                return await response.Content.ReadAsStringAsync();
+            }
+        }
+        #endregion
+
+        #region  HttpWebRequest实现post请求
+        /// <summary>
+        /// HttpWebRequest实现post请求
+        /// </summary>
+        private async static Task<string> PostWebQuest()
+        {
+            var user = new
+            {
+                Name = "Eleven",
+                Password = "123456"
+            };
+            //此处地址是jwt 登陆获取token
+            string url = "http://localhost:5002/api/Authentication/Login?name=Eleven&password=123456";
+            var postData = Newtonsoft.Json.JsonConvert.SerializeObject(user);
+
+            var request = HttpWebRequest.Create(url) as HttpWebRequest;
+            request.Timeout = 30 * 1000;//设置30s的超时
+            request.UserAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36";
+            request.ContentType = "application/json";
+            request.Method = "POST";
+            byte[] data = Encoding.UTF8.GetBytes(postData);
+            request.ContentLength = data.Length;
+            Stream postStream = request.GetRequestStream();
+            postStream.Write(data, 0, data.Length);
+            postStream.Close();
+
+            using (var res = request.GetResponse() as HttpWebResponse)
+            {
+                if (res.StatusCode == HttpStatusCode.OK)
+                {
+                    StreamReader reader = new StreamReader(res.GetResponseStream(), Encoding.UTF8);
+                    return await reader.ReadToEndAsync();
+                }
+                else
+                {
+                    throw new Exception($"请求异常{res.StatusCode}");
+                }
+            }
+        }
+        #endregion
+    }
+```
+
+### 集群
