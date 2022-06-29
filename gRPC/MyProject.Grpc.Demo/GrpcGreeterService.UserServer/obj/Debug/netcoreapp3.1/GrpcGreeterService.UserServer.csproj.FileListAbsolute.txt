@@ -24,3 +24,4 @@ F:\MyGithub\gRPC\MyProject.Grpc.Demo\GrpcGreeterService.UserServer\obj\Debug\net
 F:\MyGithub\gRPC\MyProject.Grpc.Demo\GrpcGreeterService.UserServer\obj\Debug\netcoreapp3.1\GrpcGreeterService.UserServer.dll
 F:\MyGithub\gRPC\MyProject.Grpc.Demo\GrpcGreeterService.UserServer\obj\Debug\netcoreapp3.1\GrpcGreeterService.UserServer.pdb
 F:\MyGithub\gRPC\MyProject.Grpc.Demo\GrpcGreeterService.UserServer\obj\Debug\netcoreapp3.1\GrpcGreeterService.UserServer.genruntimeconfig.cache
+F:\MyGithub\gRPC\MyProject.Grpc.Demo\GrpcGreeterService.UserServer\obj\Debug\netcoreapp3.1\GrpcGreeterService.UserServer.csproj.AssemblyReference.cache

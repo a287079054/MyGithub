@@ -10,6 +10,7 @@ namespace GrpcGreeterService.UserServer
     {
         public override Task<ZhaoxiUserReply> FindUser(ZhaoxiUserRequest request, ServerCallContext context)
         {
+            Console.WriteLine("ZhaoxiUserService&&&&&&&&&&&");
             return Task.FromResult(new ZhaoxiUserReply()
             {
                 User = new ZhaoxiUserReply.Types.UserModel()

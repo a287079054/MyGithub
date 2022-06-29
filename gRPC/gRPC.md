@@ -5,6 +5,8 @@ dotnet dev-certs https --clean  //清除证书
 dotnet dev-certs https --trust  //信任证书
 ```
 
+- 客户端流，服务端流，双向流调用：https://www.nuget.org/packages/Grpc.Net.Client
+
 ## Protos和C#类型
 
 - 其他类型参考：https://docs.microsoft.com/en-us/aspnet/core/grpc/protobuf?view=aspnetcore-3.1
@@ -943,4 +945,258 @@ public class JWTTokenHelper
     }
 ```
 
-### 集群
+## Nginx集群
+
+#### 服务端
+
+- 新建GrpcGreeterService.UserServer服务，通过cmd命令启动3个实例
+
+  ```c#
+  dotnet GrpcGreeterService.UserServer.dll --urls=https://*:7001
+  dotnet GrpcGreeterService.UserServer.dll --urls=https://*:7002
+  dotnet GrpcGreeterService.UserServer.dll --urls=https://*:7003
+  ```
+
+#### 客户端
+
+- 添加.proto文件
+
+- 修改项目配置
+
+  ```c#
+  <ItemGroup>
+  		<Protobuf Include="Protos\ZhaoxiUser.proto" GrpcServices="Client" />
+  	</ItemGroup>
+  
+  ```
+
+- Starup-ConfigureServices配置客户端
+
+  ```c#
+     services.AddGrpcClient<ZhaoxiUser.ZhaoxiUserClient>(options =>
+              {
+                  options.Address = new Uri("https://localhost:443");//nginx配置文件中的监听地址
+              }).ConfigureChannel(grpcOptions =>
+              {
+                  Console.WriteLine("This ZhaoxiUser.ZhaoxiUserClien ConfigureChannel");
+                  grpcOptions.HttpHandler = new HttpClientHandler()
+                  {
+                      ServerCertificateCustomValidationCallback = (msg, cert, chain, error) => true
+                  };
+              });
+  ```
+
+- nginx.conf文件配置
+
+```shell
+
+#user  nobody;
+worker_processes  1;
+#error_log  logs/error.log;
+#error_log  logs/error.log  notice;
+#error_log  logs/error.log  info;
+
+#pid        logs/nginx.pid;
+
+
+events {
+    worker_connections  1024;
+}
+
+
+http {
+    include       mime.types;
+    default_type  application/octet-stream;
+
+    #log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+    #                  '$status $body_bytes_sent "$http_referer" '
+    #                  '"$http_user_agent" "$http_x_forwarded_for"';
+
+    #access_log  logs/access.log  main;
+
+    sendfile        on;
+    #tcp_nopush     on;
+
+    #keepalive_timeout  0;
+    keepalive_timeout  65;
+
+    #gzip  on;
+
+   server {
+       listen       8077;#80默认端口可能被占用，修改为其他端口
+       server_name  localhost;
+   
+       #charset koi8-r;
+   
+       #access_log  logs/host.access.log  main;
+   
+       location / {
+           root   html;
+           index  index.html index.htm;
+       }
+   
+       #error_page  404              /404.html;
+   
+       # redirect server error pages to the static page /50x.html
+       #
+       error_page   500 502 503 504  /50x.html;
+       location = /50x.html {
+           root   html;
+       }
+   
+       # proxy the PHP scripts to Apache listening on 127.0.0.1:80
+       #
+       #location ~ \.php$ {
+       #    proxy_pass   http://127.0.0.1;
+       #}
+   
+       # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
+       #
+       #location ~ \.php$ {
+       #    root           html;
+       #    fastcgi_pass   127.0.0.1:9000;
+       #    fastcgi_index  index.php;
+       #    fastcgi_param  SCRIPT_FILENAME  /scripts$fastcgi_script_name;
+       #    include        fastcgi_params;
+       #}
+   
+       # deny access to .htaccess files, if Apache's document root
+       # concurs with nginx's one
+       #
+       #location ~ /\.ht {
+       #    deny  all;
+       #}
+   }
+
+
+    # another virtual host using mix of IP-, name-, and port-based configuration
+    #
+    #server {
+    #    listen       8000;
+    #    listen       somename:8080;
+    #    server_name  somename  alias  another.alias;
+
+    #    location / {
+    #        root   html;
+    #        index  index.html index.htm;
+    #    }
+    #}
+
+
+    # HTTPS server
+    #反向代理
+   #server {
+   #    listen       443 ssl http2;
+   #    server_name  localhost;
+   #
+   #    ssl_certificate      cert.pem;
+   #    ssl_certificate_key  cert.key;
+   #    #
+   #    #ssl_session_cache    shared:SSL:1m;
+   #    #ssl_session_timeout  5m;
+   #    #
+   #    #ssl_ciphers  HIGH:!aNULL:!MD5;
+   #    #ssl_prefer_server_ciphers  on;
+   #
+   #    location / {
+   #        grpc_pass grpcs://localhost:7001;
+   #    }
+   #}
+
+    #负载均衡
+    server {
+        listen       443 ssl http2; #客户端调用地址
+        server_name  localhost;
+   
+        ssl_certificate      cert.pem;#签名文件
+        ssl_certificate_key  cert.key;
+        #
+        #ssl_session_cache    shared:SSL:1m;
+        #ssl_session_timeout  5m;
+        #
+        #ssl_ciphers  HIGH:!aNULL:!MD5;
+        #ssl_prefer_server_ciphers  on;
+   
+        location / {
+            grpc_pass grpcs://ganet;
+        }
+    }
+    #集群地址
+    upstream ganet{
+        server localhost:7001;
+        server localhost:7002;
+        server localhost:7003;
+        #轮询策略
+    }
+}
+
+```
+
+- 启动nginx
+
+```
+nginx -c ./conf/nginx.conf
+```
+
+- nginx目录中的cert.key，cert.pem文件 通过工具生成，暂时未找到怎么生成
+- nginx启动成功之后，访问客户端
+  ![](F:\MyGithub\gRPC\Img\13.png)
+
+## grpc&WebApi
+
+- 参考：https://docs.microsoft.com/en-us/aspnet/core/grpc/comparison?view=aspnetcore-3.1
+
+![](F:\MyGithub\gRPC\Img\12.png)
+
+## grpc优点
+
+gRPC 消息使用[Protobuf](https://developers.google.com/protocol-buffers/docs/overview)进行序列化，这是一种高效的二进制消息格式。Protobuf 在服务器和客户端上的序列化速度非常快。Protobuf 序列化会产生较小的消息负载，这在移动应用程序等带宽有限的场景中很重要。
+
+gRPC 是为 HTTP/2 设计的，它是 HTTP 的主要修订版，与 HTTP 1.x 相比具有显着的性能优势：
+
+- 二进制成帧和压缩。HTTP/2 协议在发送和接收方面都非常紧凑和高效。
+- 通过单个 TCP 连接多路复用多个 HTTP/2 调用。多路复用消除[了行头阻塞](https://en.wikipedia.org/wiki/Head-of-line_blocking)。
+
+HTTP/2 不是 gRPC 独有的。许多请求类型，包括带有 JSON 的 HTTP API，都可以使用 HTTP/2 并从其性能改进中受益。
+
+##  gRPC缺点
+
+#### 有限的浏览器支持
+
+今天从浏览器直接调用 gRPC 服务是不可能的。gRPC 大量使用 HTTP/2 功能，并且没有浏览器提供对 Web 请求所需的控制级别以支持 gRPC 客户端。例如，浏览器不允许调用者要求使用 HTTP/2，或提供对底层 HTTP/2 帧的访问。
+
+将 gRPC 引入浏览器应用程序有两种常见的方法：
+
+- [gRPC-Web](https://grpc.io/docs/tutorials/basic/web.html)是 gRPC 团队的一项附加技术，可在浏览器中提供 gRPC 支持。gRPC-Web 允许浏览器应用程序受益于 gRPC 的高性能和低网络使用率。gRPC-Web 并不支持 gRPC 的所有功能。不支持客户端和双向流式传输，并且对服务器流式传输的支持有限。
+
+  .NET Core 支持 gRPC-Web。有关详细信息，请参阅[在浏览器应用程序中使用 gRPC](https://docs.microsoft.com/en-us/aspnet/core/grpc/browser?view=aspnetcore-3.1)。
+
+- [通过使用HTTP 元数据](https://cloud.google.com/service-infrastructure/docs/service-management/reference/rpc/google.api#google.api.HttpRule)`.proto`注释文件，可以从 gRPC 服务自动创建 RESTful JSON Web API 。这允许应用程序同时支持 gRPC 和 JSON Web API，而无需重复为两者构建单独服务的工作。
+
+  .NET Core 具有从 gRPC 服务创建 JSON Web API 的实验性支持。有关更多信息，请参阅[gRPC JSON 转码](https://docs.microsoft.com/en-us/aspnet/core/grpc/httpapi?view=aspnetcore-3.1)。
+
+#### 人类不可读
+
+HTTP API 请求以文本形式发送，可供人类阅读和创建。
+
+gRPC 消息默认使用 Protobuf 编码。虽然 Protobuf 的发送和接收效率很高，但它的二进制格式不是人类可读的。Protobuf 需要`.proto`文件中指定的消息接口描述才能正确反序列化。需要额外的工具来分析网络上的 Protobuf 有效负载并手动编写请求。
+
+存在诸如[服务器反射](https://github.com/grpc/grpc/blob/master/doc/server-reflection.md)和[gRPC 命令行工具](https://github.com/grpc/grpc/blob/master/doc/command_line_tool.md)之类的功能来协助处理二进制 Protobuf 消息。此外，Protobuf 消息支持[与 JSON 之间的转换](https://developers.google.com/protocol-buffers/docs/proto3#json)。内置的 JSON 转换提供了一种在调试时将 Protobuf 消息转换为人类可读形式和从人类可读形式转换的有效方法。
+
+#### 替代框架方案
+
+在以下情况下，建议使用其他框架而不是 gRPC：
+
+- **浏览器可访问的 API**：浏览器不完全支持 gRPC。gRPC-Web 可以提供浏览器支持，但它有局限性并引入了服务器代理。
+- **广播实时通信**：gRPC 支持通过流进行实时通信，但不存在将消息广播到已注册连接的概念。例如，在聊天室场景中，新的聊天消息应该发送到聊天室中的所有客户端，每个 gRPC 调用都需要单独将新的聊天消息流式传输到客户端。[SignalR](https://docs.microsoft.com/en-us/aspnet/core/signalr/introduction?view=aspnetcore-3.1)是适用于这种情况的有用框架。SignalR 具有持久连接的概念和对广播消息的内置支持。
+
+## gRPC 推荐场景
+
+gRPC 非常适合以下场景：
+
+- **微服务： gRPC**专为低延迟和高吞吐量通信而设计。gRPC 非常适合效率至关重要的轻量级微服务。
+- **点对点实时通信**：gRPC 对双向流有出色的支持。gRPC 服务可以实时推送消息，无需轮询。
+- **多语言环境**：gRPC 工具支持所有流行的开发语言，使 gRPC 成为多语言环境的不错选择。
+- **网络受限环境**：gRPC 消息使用轻量级消息格式 Protobuf 进行序列化。gRPC 消息始终小于等效的 JSON 消息。
+- **进程间通信 (IPC)**：IPC 传输（如 Unix 域套接字和命名管道）可以与 gRPC 一起使用，以便在同一台机器上的应用程序之间进行通信。有关更多信息，请参阅[使用 gRPC 的进程间通信](https://docs.microsoft.com/en-us/aspnet/core/grpc/interprocess?view=aspnetcore-3.1)。
+

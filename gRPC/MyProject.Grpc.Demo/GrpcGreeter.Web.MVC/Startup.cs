@@ -53,7 +53,7 @@ namespace GrpcGreeter.Web.MVC
             //    grpcOptions.Credentials = ChannelCredentials.Create(new SslCredentials(), callCredentials);
             //    //请求都带上token，也可以在调用方法时传递： var replyPlus = await client.PlusAsync(requestPara, headers);
             //});
-
+            #region Nginx搭建集群
             services.AddGrpcClient<ZhaoxiUser.ZhaoxiUserClient>(options =>
             {
                 options.Address = new Uri("https://localhost:443");
@@ -71,6 +71,8 @@ namespace GrpcGreeter.Web.MVC
                 };
             });
             #endregion
+            #endregion
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

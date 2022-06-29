@@ -40,10 +40,10 @@ namespace GrpcGreeter.Web.MVC.Controllers
             //        Console.WriteLine($"CustomMath {Thread.CurrentThread.ManagedThreadId} 服务返回数据:{reply.Message} ");
             //    }
             //}
-            //{
-            //    var reply = await this._customMathClient.SayHelloAsync(new HelloRequestMath { Name = "Eleven1" });
-            //    Console.WriteLine($"CustomMath {Thread.CurrentThread.ManagedThreadId} 服务返回数据1:{reply.Message} ");
-            //}
+            {
+                var reply = await this._customMathClient.SayHelloAsync(new HelloRequestMath { Name = "Eleven1" });
+                Console.WriteLine($"CustomMath {Thread.CurrentThread.ManagedThreadId} 服务返回数据1:{reply.Message} ");
+            }
             //{
             //    var reply = this._customMathClient.SayHello(new HelloRequestMath { Name = "Eleven2" });
             //    Console.WriteLine($"CustomMath {Thread.CurrentThread.ManagedThreadId} 服务返回数据2:{reply.Message} ");
@@ -64,6 +64,8 @@ namespace GrpcGreeter.Web.MVC.Controllers
             }
 
             {
+                //AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2Support", true);
+                //AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
                 var reply = await this._userClient.FindUserAsync(new ZhaoxiUserRequest() { Id = 123 });
                 Console.WriteLine($"_userClient {Thread.CurrentThread.ManagedThreadId} 服务返回数据4:{Newtonsoft.Json.JsonConvert.SerializeObject(reply.User)} ");
                 base.ViewBag.Luck = reply.User.Name;
