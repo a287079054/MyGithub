@@ -1,0 +1,39 @@
+version: "3"
+services:
+  redis-master4:
+    image: redis # 基础镜像
+    container_name: node7 # 容器名称
+    working_dir: /config # 切换工作目录
+    environment: # 环境变量
+      - PORT=6397 # 会使用config/nodes-${PORT}.conf这个配置文件
+    ports: # 映射端口，对外提供服务
+      - 6397:6397 # redis的服务端口
+      - 16397:16397 # redis集群监控端口
+    stdin_open: true # 标准输入打开
+    tty: true # 后台运行不退出
+    network_mode: host # 使用host模式
+    privileged: true # 拥有容器内命令执行的权限
+    volumes:
+      - /mydata/redis-cluster/config:/config #配置文件目录映射到宿主机
+    entrypoint: # 设置服务默认的启动程序
+      - /bin/bash
+      - redis.sh
+  redis-slave4:
+    image: redis
+    container_name: node8
+    working_dir: /config
+    environment:
+      - PORT=6398
+    ports:
+      - 6398:6398
+      - 16398:16398
+    stdin_open: true
+    network_mode: host
+    tty: true
+    privileged: true
+    volumes:
+      - /mydata/redis-cluster/config:/config
+    entrypoint:
+      - /bin/bash
+      - redis.sh
+  

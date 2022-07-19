@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "IEtOb2orzI0PPUGpvVjA4CU9TaDXmCvX+V2vfMhIKR89J6Bz1xZf5fQ6eZdcJyRXrtwns9kvgjpxc7sDlc/E5Q==",
+  "success": true,
+  "projectFilePath": "F:\\MyGithub\\MyProject\\MyProject.WebMVC\\MyProject.WebMVC.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\HUAWEI\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\3.1.22\\microsoft.netcore.app.host.win-x64.3.1.22.nupkg.sha512"
+  ],
+  "logs": []
+}

@@ -5,7 +5,12 @@
       "ProjectGuid": "b87aa006-4e31-4b89-bc75-ee8b84d2c945",
       "DisplayName": "MyProject.WebAPI",
       "ColorIndex": 0
+    },
+    "d7ba4cd5-2673-4855-b811-66b4c845cef7": {
+      "ProjectGuid": "d7ba4cd5-2673-4855-b811-66b4c845cef7",
+      "DisplayName": "MyProject.WebMVC",
+      "ColorIndex": 1
     }
   },
-  "NextColorIndex": 1
+  "NextColorIndex": 2
 }
