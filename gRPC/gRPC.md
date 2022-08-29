@@ -227,7 +227,7 @@ gRPC 模板配置为使用[传输层安全性 (TLS)](https://tools.ietf.org/html
 - `Program.cs`：包含 gRPC 服务的入口点。有关详细信息，请参阅[ASP.NET Core 中的 .NET 通用主机](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/host/generic-host?view=aspnetcore-3.1)。
 - `Startup.cs`：包含配置应用行为的代码。更多信息，请参阅[应用启动](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/startup?view=aspnetcore-3.1)。
 
-###  .NET 控制台应用程序中创建 gRPC 客户端
+###  创建 gRPC 客户端
 
 - 打开 Visual Studio 的第二个实例并选择**Create a new project**。
 - 在**Create a new project**对话框中，选择控制台应用.NetCore。
@@ -301,7 +301,7 @@ namespace GrpcGreeterClient
 
 以上就能在控制台正常调用gRPC服务了
 
-### 使用 gRPC Greeter 服务测试 gRPC 客户端
+### 测试 gRPC 客户端
 
 - 在 Greeter 服务中，按下`Ctrl+F5`以启动不带调试器的服务器。
 - 在`GrpcGreeterClient`项目中，按`Ctrl+F5`启动不带调试器的客户端
@@ -316,7 +316,7 @@ Press any key to exit...
 
 gRPC 服务在写入命令提示符的日志中记录成功调用的详细信息：
 
-```
+```c#
 info: Microsoft.Hosting.Lifetime[0]
       Now listening on: https://localhost:5001
 info: Microsoft.Hosting.Lifetime[0]
