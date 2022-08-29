@@ -135,7 +135,7 @@ systemctl enable docker
 ⑦ 验证安装是否成功
 
 ```shell
-![3](F:\MyGithub\Docker\Img\3.png)docker -v
+docker -v
 docker info
 ```
 
@@ -508,7 +508,7 @@ docker run -d --name nginx_2 -v /data/nginx/html:/usr/share/nginx/html nginx
 
 # .NetCore部署在Docker
 
-## 第一种
+## 第一种（发布网站）
 
 ① 发布.NetCore网站
 
@@ -533,34 +533,44 @@ docker run -d -p 8081:80 -v /vip/wpublish:/app --workdir /app mcr.microsoft.com/
 
 ## 第二种（Dockerfile）
 
-①Visual Studio 创建dockerfile文件，网站点击添加，选择docker支持，选择Linx
+### ①创建dockerfile文件
 
-![](F:\MyGithub\Docker\Img\36.png)
+Visual Studio 创建dockerfile文件，网站点击添加，选择docker支持，选择Linx
 
-②阿里云服务器添加目录，并将项目拷贝到新建的目录，
+![](F:\MyGithub\Docker\Img\52.png)
 
-![](F:\MyGithub\Docker\Img\38.png)
+### ②拷贝项目
 
-③ Dockerfile文件拷贝到sln解决方案目录下，Dockerfile文件是从该目录开始copy的
+- 在服务器创建目录/elevenmicro/webapidemo/，并将网站项目项目拷贝到新建的目录。
+
+- **注意：项目有引用其他项目，并且引用的是内部引用，不是引用dll文件的话，需要将该引用的项目也拷贝到目录**
+
+![](F:\MyGithub\Docker\Img\53.png)
+
+### ③ 拷贝Dockerfile文件
+
+- Dockerfile文件拷贝到/elevenmicro/webapidemo目录
 
 <img src="F:\MyGithub\Docker\Img\39.png" style="zoom:150%;" />
 
-④创建镜像
+### ④创建镜像
+
+- cd进入到/elevenmicro/webapidemo目录
 
 ```shell
-docker build -t core31v1.619 -f Dockerfile .
+docker build -t api31v2.730 -f Dockerfile .
 #.表示当前目录
 ```
 
-![](F:\MyGithub\Docker\Img\40.png)
+![](F:\MyGithub\Docker\Img\54.png)
 
- ⑤创建容器实例
+### ⑤创建容器实例
 
 ```shell
-docker run -itd -p 8082:80 core31v1.619
+docker run -itd -p 5726:80 api31v2.730
 ```
 
-![](F:\MyGithub\Docker\Img\41.png)
+![](F:\MyGithub\Docker\Img\55.png)
 
 # Nginx+集群
 
